@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  name: MyString
+  model: MyString
+  link: MyString
+  login: MyString
+  pass: MyString
+  port: 1
+  add_date: 2013-11-06
+  edit_date: 2013-11-06
+
+two:
+  name: MyString
+  model: MyString
+  link: MyString
+  login: MyString
+  pass: MyString
+  port: 1
+  add_date: 2013-11-06
+  edit_date: 2013-11-06

@@ -1,0 +1,27 @@
+	<div>
+		<%= link_to "Nowy producent", new_producer_path, :class => "btn btn-primary" %>
+		<%= link_to "lista kamer", links_path, :class => "btn btn-default" %>
+	</div><br /><br />
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th>#</th>
+				<th>Producent</th>
+				<th>Ilość kamer</th>
+			</tr>
+		</thead>
+		<% Producer.all.each do |l| %>
+		<thead>
+			<tr>
+				<td><%= l.id %></td>
+				<td><%= l.producer %></td>
+				<td><%= l.links.count %></td>
+				<td><%= link_to "usuń", producer_path(l.id), method: :delete %></td>
+			</tr>
+		</thead>
+		<% end %>
+		
+		
+	</table>
+	
+	

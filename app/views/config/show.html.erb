@@ -1,0 +1,51 @@
+<div class="row">
+	<div class="col-md-4">
+    	<div class="list-group">
+        	<a href="#" class="list-group-item active">
+              Kamery
+            </a>
+              
+				<% Camera.where(:user_id => session[:user_id]).each do |list| %>
+					<% if list.recording? %>
+						<%= link_to "/config/#{list.id}", :class => "list-group-item" do %>
+							<span class="label label-danger">rec</span> <%= list.name %>
+						<% end %>
+					<% else %>
+						<%= link_to list.name,  "/config/#{list.id}", :class => "list-group-item" %>
+					<% end %>	
+				<% end %>      
+              <%= link_to "Dodaj nową", new_config_path , :class => "list-group-item" %>
+            </div>
+	</div><!-- /.col-sm-4 -->
+
+    <div class="col-md-6">
+			<h1>Konfiguracja</h1>
+			<h2><%= @camera.name %></h2>
+
+			<%= form_for :camera, :url => {:action => "update"} do |c| %> 
+			
+			<%= c.label "nazwa kamery" %>
+			<%= c.text_field :name, :class => "form-control" %><br />
+			
+			<%= c.label "model kamery" %><br />
+			<%= c.collection_select :url_id, Link.all, :id, :model, :class => "form-control" %><br /><br />
+			
+			<%= c.label "link do połączenia z kamerą" %>
+			<%= c.text_field :link, :class => "form-control" %><br />
+			
+			<%= c.label "login" %>
+			<%= c.text_field :login, :class => "form-control" %><br />
+			
+			<%= c.label "hasło" %>
+			<%= c.password_field :pass, :class => "form-control" %><br />
+			
+			<%= c.label "port" %>
+			<%= c.text_field :port, :class => "form-control" %><br />
+		
+			<%= c.submit "edytuj", :class => "btn btn-primary"%> albo 
+			
+			<% end %>
+			<p><%= button_to "Usuń kamerę", config_path(@camera), :method => :delete, :class => "btn btn-danger" %></p>
+
+		</div>
+      </div><!--/row-->

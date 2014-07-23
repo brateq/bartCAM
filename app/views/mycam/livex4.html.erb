@@ -1,0 +1,21 @@
+ <div class="row-fluid">
+        <div class="span3">
+          <div class="well sidebar-nav">
+            <ul class="nav nav-list">
+              <li class="nav-header">Kamery</li>
+              
+				<% Camera.where(:user_id => session[:user_id]).each do |list| %>
+					<li><%= link_to list.name, "/live/#{list.id}"  %></li>
+				<% end %>              
+            </ul>
+          </div><!--/.well -->
+        </div><!--/span-->
+        <div class="span9">
+			<h1>Podgląd na żywo</h1>
+			
+			
+			<h2><%= @camera.name %></h2>
+			<img src=<%= "http://#{@camera.login}:#{@camera.pass}@#{@camera.link}:#{@camera.port}"  %>/>
+
+		</div>
+      </div><!--/row-->

@@ -1,0 +1,40 @@
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+		<%= form_for(@link) do |f| %>
+		  <% if @link.errors.any? %>
+		    <div id="error_explanation">
+		      <h2><%= pluralize(@link.errors.count, "error") %> prohibited this link from being saved:</h2>
+		
+		      <ul>
+		      <% @link.errors.full_messages.each do |msg| %>
+		        <li><%= msg %></li>
+		      <% end %>
+		      </ul>
+		    </div>
+		  <% end %>
+		  <div class="field">
+		    <%= f.label :producer_id %><br>
+		    <%= f.collection_select :producer_id, Producer.all, :id, :producer %> <%= link_to "producenci", producer_index_path %><br /><br />
+		  </div>
+		  <div class="field">
+		    <%= f.label :model %><br>
+		    <%= f.text_field :model, :class => "form-control" %>
+		  </div>
+		  <div class="field">
+		    <%= f.label :link %><br>
+		    <%= f.text_field :link, :class => "form-control" %>
+		  </div>
+		  <div class="field">
+		    <%= f.label :comment %><br>
+		    <%= f.text_field :comment, :class => "form-control" %>
+		  </div>
+		
+		  <div class="actions">
+		    <%= f.submit "zapisz", :class => "btn btn-primary pull-left"%>
+		  </div>
+		  <div>
+		  	<%= link_to "anuluj", links_path, :class => "btn btn-warning pull-right" %>
+		  </div>
+		<% end %>
+	</div>
+</div>

@@ -1,0 +1,21 @@
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+			<h1>Konfiguracja</h1>
+			<h2>Dodanie nowej konfiguracji kamery</h2>
+			<%= form_for "producer", url: producer_index_path do |form| %> 
+				<% if @url and @url.errors %>
+				<ul>
+					<% @url.errors.full_messages.each do |err| %>
+					 <li><%= err %></li>
+				<% end %>
+				</ul>
+				<% end %>
+
+				<%= form.label "Nowy producent" %><br />
+				<%= form.text_field :producer, :class => "form-control" %><br />
+				
+				<%= form.submit "zapisz", :class => "btn btn-primary"%>
+				
+			<% end %>
+		</div>
+</div><!--/row-->

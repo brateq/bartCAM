@@ -1,0 +1,38 @@
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+			<h1>Konfiguracja</h1>
+			<h2>Konfiguracja nowej kamery</h2>
+			<% if @save and @save.errors %>
+			<ul>
+				<% @save.errors.full_messages.each do |err| %>
+				 <li><%= err %></li>
+			<% end %>
+			</ul>
+			<% end %>
+			<%= form_for "camera", :url => {:action => :create} do |c| %>
+			
+			<%= c.label "nazwa kamery" %>
+			<%= c.text_field "name", :class => "form-control" %><br />
+			
+			<%= c.label "model kamery" %>  <%= link_to "lista dostępnych modeli", links_path %><br />
+			<%= c.collection_select :url_id, Link.all, :id, :model,{:prompt=>"Proszę wybrać model kamery"}, {:class => "form-control"} %><br />
+			
+			<%= c.label "link do połączenia z kamerą" %>
+			<%= c.text_field "link", :class => "form-control" %><br />
+			
+			<%= c.label "login" %>
+			<%= c.text_field "login", :class => "form-control" %><br />
+			
+			<%= c.label "hasło" %>
+			<%= c.password_field "pass", :class => "form-control" %><br />
+			
+			<%= c.label "port" %>
+			<%= c.text_field "port", :class => "form-control" %><br />
+			<%= c.submit "zapisz", :class => "btn btn-primary"%>
+			
+			<% end %>
+			
+			
+
+		</div>
+      </div><!--/row-->

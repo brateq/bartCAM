@@ -1,0 +1,32 @@
+	<div>
+		<%= link_to "Nowa konfiguracja", new_link_path, :class => "btn btn-primary" %>
+		<%= link_to "producenci", producer_index_path, :class => "btn btn-default" %>
+	</div>
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th>#</th>
+				<th>Producent</th>
+				<th>Model</th>
+				<th>Link</th>
+				<th>Komentarz</th>
+			</tr>
+		</thead>
+		<% Link.all.each do |l| %>
+		<thead>
+			<tr>
+				<td><%= l.id %></td>
+				<td><%= l.producer.producer %></td>
+				<td><%= l.model %></td>
+				<td><%= l.link %></td>
+				<td><%= l.comment %></td>
+				<td><%= link_to "usuń",  link_path(l.id), method: :delete %></td>
+				<td><%= link_to "edytuj", edit_link_path(l.id) %></td>
+			</tr>
+		</thead>
+		<% end %>
+		
+		
+	</table>
+	
+	

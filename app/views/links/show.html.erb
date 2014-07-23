@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Model:</strong>
+  <%= @link.model %>
+</p>
+
+<p>
+  <strong>Link:</strong>
+  <%= @link.link %>
+</p>
+
+<p>
+  <strong>Comment:</strong>
+  <%= @link.comment %>
+</p>
+
+<p>
+  <strong>Producer:</strong>
+  <%= @link.producer_id %>
+</p>
+
+<%= link_to 'Edit', edit_link_path(@link) %> |
+<%= link_to 'Back', links_path %>

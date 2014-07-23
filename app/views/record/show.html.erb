@@ -1,0 +1,37 @@
+<div class="row">
+	<div class="col-md-4">
+    	<div class="list-group">
+        	<a href="#" class="list-group-item active">
+              Kamery
+            </a>
+            
+				<% Camera.where(:user_id => session[:user_id]).each do |list| %>
+					<% if list.recording? %>
+						
+						<%= link_to "/record/#{list.id}", :class => "list-group-item" do %>
+						<span class="label label-danger">rec</span> <%= list.name %>
+						<% end %>
+			
+					<% else %>
+						
+						<%= link_to list.name,  "/record/#{list.id}", :class => "list-group-item" %>
+					<% end %>	
+				<% end %>              
+            
+		</div>
+	</div><!-- /.col-sm-4 -->
+
+    <div class="col-md-6">
+
+  		
+  		
+		<h1>Nagrywanie</h1>
+		<h2><%= @camera.name %></h2>
+			
+		<% if @button == :true %>
+			<%= button_to "Rozpocznij nagrywanie", record_path, :method => :patch, :class => "btn btn-primary" %>
+		<% else %>
+			<%= button_to "Zakończ nagrywanie", record_path, :method => :delete, :class => "btn btn-danger" %>
+		<% end %>
+	</div>  
+</div><!--/row-->

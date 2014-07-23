@@ -1,0 +1,51 @@
+ <div class="row-fluid">
+        <div class="span3">
+          <div class="well sidebar-nav">
+            <ul class="nav nav-list">
+              <li class="nav-header">Kamery</li>
+              
+				<% Camera.where(:user_id => session[:user_id]).each do |list| %>
+					<li><%= link_to list.name, "/config/#{list.id}"  %></li>
+				<% end %> 
+			  	<hr>
+              <li><%= link_to "Dodaj nową", "/mycam/new" %></li>
+
+            </ul>
+          </div><!--/.well -->
+        </div><!--/span-->
+        <div class="span9">
+			<h1>Konfiguracja</h1>
+			<h2>Konfiguracja nowej kamery</h2>
+			<% if @save and @save.errors %>
+			<ul>
+				<% @save.errors.full_messages.each do |err| %>
+				 <li><%= err %></li>
+			<% end %>
+			</ul>
+			<% end %>
+			<%= form_for "camera", :url => {:action => "new"} do |c| %>
+			
+			<%= c.label "nazwa kamery" %>
+			<%= c.text_field "name" %><br />
+			
+			<%= c.label "model kamery" %>
+			<%= c.text_field "model" %><br />
+			
+			<%= c.label "link do połączenia z kamerą" %>
+			<%= c.text_field "link" %><br />
+			
+			<%= c.label "login" %>
+			<%= c.text_field "login" %><br />
+			
+			<%= c.label "hasło" %>
+			<%= c.password_field "pass" %><br />
+			
+			<%= c.label "port" %>
+			<%= c.text_field "port" %><br />
+			
+			<%= c.submit %>
+			
+			<% end %>
+
+		</div>
+      </div><!--/row-->

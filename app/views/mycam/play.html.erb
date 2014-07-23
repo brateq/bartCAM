@@ -1,0 +1,49 @@
+<div class="row">
+	<div class="col-md-4">
+    	<div class="list-group">
+            <% Camera.where(:user_id => session[:user_id]).each do |list| %>
+					<% if @active == list.id.to_s %>
+						<%= link_to list.name, "/play/#{list.id}", :class => "list-group-item active"  %>
+						<% 
+						Dir.chdir("#{Rails.root}/public/video/#{list.id}")
+						if @files = Dir.glob("*")
+						@files.sort!.reverse! %> 
+							<% for file in @files %>
+								<% @file = file.gsub!(/.mp4/, '') %>
+									
+								<%= link_to file, "/play/#{list.id}/#{@file}", :class => "list-group-item" %>
+								
+								
+							<% end %>
+							<br /><br />
+						<% end %>
+					<% else %>
+
+						<%= link_to list.name, "/play/#{list.id}", :class => "list-group-item"  %> 
+					<% end %>
+					
+					
+			<% end %> 
+			
+        </div>
+	</div><!-- /.col-sm-4 -->
+
+    <div class="col-md-8">
+    
+		<h1>Archiwum</h1>
+		<h3><%= @camera.name %></h3> 
+		<% if File.exists?("#{@video}.mp4") %>
+			<video controls autoplay loop width="100%">
+				<source src="<%= "/video/#{params[:id]}/#{@video}.mp4" %>" type="video/mp4">
+			</video>
+			<div><%= link_to "Pobierz nagranie", "/video/#{params[:id]}/#{@video}.mp4", :class => "btn btn-default", :type => "application/pdf" %></div>
+			
+		<% end %>
+		
+		
+	</div>
+</div>
+
+
+
+

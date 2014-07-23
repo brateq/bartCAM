@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  model: MyString
+  link: MyString
+  comment: MyText
+  producer_id: 1
+
+two:
+  model: MyString
+  link: MyString
+  comment: MyText
+  producer_id: 1

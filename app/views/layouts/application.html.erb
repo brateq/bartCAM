@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= content_for?(:title) ? yield(:title) : "Bartcam" %></title>
+	<%= csrf_meta_tags %>
+  	<%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
+  	<%= javascript_include_tag "application", "data-turbolinks-track" => true %>
+  </head>
+  <body>
+	<div class="container">
+      <div class="navbar navbar-default" role="navigation">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Rozwiń menu</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand logo-nav" href="#"><%= image_tag("logo.png") %></a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+	              <li><%= link_to "na zywo", live_path  %></li>
+	              <li><%= link_to "nagrywanie", :record_index  %></li>
+	              <li><%= link_to "archiwum", "/play"  %></li>
+	              <li><%= link_to "konfiguracja", '/config'%></li>
+	              
+	             </ul>
+          <ul class="nav navbar-nav navbar-right">
+          	<li><%= link_to "wylogowanie", "/account/logou" if session[:user_id] %></li> 
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+
+    
+        <% flash.each do |key, value| %>
+        	<div class="<%= flash_class(key) %>">
+              <%= value %>
+        	</div>
+  		<% end %>
+  		
+        <%= yield %>
+     
+	
+    </div> <!-- /container -->
+    
+	<div id="footer">
+      <div class="container">
+        <p class="text-muted">&copy; BartCam 2014</p>
+      </div>
+    </div>
+  </body>
+</html>
+
+  	

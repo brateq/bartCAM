@@ -1,0 +1,23 @@
+<div class="row">
+	<div class="col-md-4">
+    	<div class="list-group">
+        	<a href="#" class="list-group-item active">
+              Kamery
+            </a>
+            
+				<% Camera.where(:user_id => session[:user_id]).each do |list| %>
+					<% if list.recording? %>
+						
+						<%= link_to "/live/#{list.id}", :class => "list-group-item" do %>
+						<span class="label label-danger">rec</span> <%= list.name %>
+						<% end %>
+			
+					<% else %>
+						
+						<%= link_to list.name,  "/live/#{list.id}", :class => "list-group-item" %>
+					<% end %>	
+				<% end %>               
+		</div>
+	</div><!-- /.col-sm-4 -->
+
+</div><!--/row-->
