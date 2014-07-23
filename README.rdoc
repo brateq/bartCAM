@@ -1,28 +1,14 @@
-== README
+== Welcome to bartCAM
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+bartCAM is a VSaaS (Video Surveillance as a Service) written with a Ruby on Rails, and packages Motion and AVconv. 
 
-Things you may want to cover:
+== Getting started
 
-* Ruby version
+First, install new versions of Motion and AVconv packages. 
+To run bartCAM you need at least Ruby 2.0 and Rails 4.0.
 
-* System dependencies
+After that run:
+        rake db:setup
+        
+And everything should work :)
 
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
-
-
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
