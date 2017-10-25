@@ -13,7 +13,7 @@
 
 ActiveRecord::Schema.define(version: 20140209092009) do
 
-  create_table "cameras", force: true do |t|
+  create_table "cameras", force: :cascade do |t|
     t.string   "name"
     t.string   "model"
     t.string   "link"
@@ -31,7 +31,7 @@ ActiveRecord::Schema.define(version: 20140209092009) do
 
   add_index "cameras", ["url_id"], name: "index_cameras_on_url_id"
 
-  create_table "links", force: true do |t|
+  create_table "links", force: :cascade do |t|
     t.string   "model"
     t.string   "link"
     t.text     "comment"
@@ -42,28 +42,13 @@ ActiveRecord::Schema.define(version: 20140209092009) do
 
   add_index "links", ["producer_id"], name: "index_links_on_producer_id"
 
-  create_table "mycams", force: true do |t|
-    t.string   "camera_address"
-    t.string   "camera_login"
-    t.string   "camera_password"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "producers", force: true do |t|
+  create_table "producers", force: :cascade do |t|
     t.string   "producer"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "records", force: true do |t|
-    t.string   "status"
-    t.integer  "id_cam"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "users", force: true do |t|
+  create_table "users", force: :cascade do |t|
     t.string   "password"
     t.string   "email"
     t.date     "register_date"
