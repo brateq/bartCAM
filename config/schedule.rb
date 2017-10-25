@@ -1,7 +1,6 @@
 every 2.minutes do
-   runner "Camera.wush"
+  runner 'Camera.wush'
 end
-
 
 # Use this file to easily define all of your cron jobs.
 #

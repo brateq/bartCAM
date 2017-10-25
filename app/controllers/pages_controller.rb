@@ -1,7 +1,5 @@
 class PagesController < ApplicationController
-  def todo
-  end
+  def todo; end
 
-  def contact
-  end
+  def contact; end
 end
