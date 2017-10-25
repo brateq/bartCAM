@@ -1,24 +1,23 @@
 Bartcam::Application.routes.draw do
+  root 'mycam#live'
 
-  root "mycam#live"
-  
-  get "record/wush"
-  get "pages/todo"
-  get "pages/contact"
-  get "producer/new"
-  get "producer/create"
-  get "record/start"
-  get "record/stop"
- 	get "mycam/main"
+  get 'record/wush'
+  get 'pages/todo'
+  get 'pages/contact'
+  get 'producer/new'
+  get 'producer/create'
+  get 'record/start'
+  get 'record/stop'
+  get 'mycam/main'
 
- 	post 'config/new'
- 	post 'config/:id' => 'config#update'
- 	
-  get "mycam/record"
-  get "mycam/play"
-  
-  get "mycam/logout"
-    
+  post 'config/new'
+  post 'config/:id' => 'config#update'
+
+  get 'mycam/record'
+  get 'mycam/play'
+
+  get 'mycam/logout'
+
   match '/', to: 'mycam#main', via: 'get'
   match 'live', to: 'mycam#live', via: 'get'
   match 'live/:id', to: 'mycam#live', via: 'get'
@@ -26,21 +25,21 @@ Bartcam::Application.routes.draw do
   get 'play/:id' => 'mycam#play'
   get 'play/:id/:video' => 'mycam#play'
   match 'login', to: 'account#login', via: 'get'
- 
-  get "account/start"
-  get "account/new"
-  get "account/remove"
-  get "account/logou"
-  
-  post "account/login" => "account#login"
-  get "account/login"
-  post "account/new" => "account#new"
-  
+
+  get 'account/start'
+  get 'account/new'
+  get 'account/remove'
+  get 'account/logou'
+
+  post 'account/login' => 'account#login'
+  get 'account/login'
+  post 'account/new' => 'account#new'
+
   resources :record
   resources :producer
   resources :links
   resources :config
-  
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
@@ -81,7 +80,7 @@ Bartcam::Application.routes.draw do
   #       get 'recent', on: :collection
   #     end
   #   end
-  
+
   # Example resource route with concerns:
   #   concern :toggleable do
   #     post 'toggle'
