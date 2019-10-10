@@ -3,6 +3,7 @@
 class ConfigController < ApplicationController
   before_action :require_login, :any_camera, only: %i[show index]
   before_action :set_config, only: %i[show edit update destroy]
+
   def index
     @first_camera = Camera.where(user_id: session[:user_id]).first
     redirect_to action: :show, id: @first_camera
@@ -50,8 +51,6 @@ class ConfigController < ApplicationController
   def camera_config
     params.require(:camera).permit(:name, :url_id, :link, :login, :pass, :port)
   end
-
-  private
 
   def set_config
     @camera = Camera.find(params[:id])
