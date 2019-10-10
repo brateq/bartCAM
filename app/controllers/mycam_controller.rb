@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MycamController < ApplicationController
   before_action :require_login, :any_camera
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 every 2.minutes do
   runner 'Camera.wush'
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AccountController < ApplicationController
   def start
     @id = session[:user_id]

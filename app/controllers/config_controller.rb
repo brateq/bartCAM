@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ConfigController < ApplicationController
   before_action :require_login, :any_camera, only: %i[show index]
   before_action :set_config, only: %i[show edit update destroy]
