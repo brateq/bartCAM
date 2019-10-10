@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ProducerController < ApplicationController
   def new
     @save = Producer.new

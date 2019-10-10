@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateCameras < ActiveRecord::Migration
   def change
     create_table :cameras do |t|

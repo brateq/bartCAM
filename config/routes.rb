@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Bartcam::Application.routes.draw do
   root 'mycam#live'
 

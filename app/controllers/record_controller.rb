@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RecordController < ApplicationController
   before_action :require_login, :any_camera
 
@@ -19,11 +21,13 @@ class RecordController < ApplicationController
     Camera.recording.each do |camera|
       @size = 0
       next unless @files = Dir.glob("#{Rails.root}/public/video/#{camera.id}/*").sort
-      for file in @files
+
+      @files.each do |file|
         @size += File.size(file)
       end
 
       next unless @size > 1.megabyte
+
       if File.delete(@files.first)
         flash[:notice] = 'Coś zostało usunięte'
         redirect_to '/'

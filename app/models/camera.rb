@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Camera < ActiveRecord::Base
   belongs_to :user
   before_update :delete_http
@@ -13,7 +15,8 @@ class Camera < ActiveRecord::Base
     Camera.recording.each do |camera|
       @size = 0
       next unless @files = Dir.glob("#{Rails.root}/public/video/#{camera.id}/*").sort
-      for file in @files
+
+      @files.each do |file|
         @size += File.size(file)
       end
 

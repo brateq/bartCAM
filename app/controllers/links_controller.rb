@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class LinksController < ApplicationController
   before_action :set_link, only: %i[show edit update destroy]
 
