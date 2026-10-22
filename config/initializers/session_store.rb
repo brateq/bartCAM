@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
-# Be sure to restart your server when you modify this file.
-
-Bartcam::Application.config.session_store :cookie_store, key: '_bartcam_session'
+Rails.application.config.session_store :cookie_store,
+  key: '_bartcam_session_v2', httponly: true, same_site: :lax,
+  secure: Rails.env.production?, expire_after: 12.hours

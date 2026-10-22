@@ -1,14 +1,88 @@
-== Welcome to bartCAM
+== bartCAM
 
-bartCAM is a VSaaS (Video Surveillance as a Service) written with a Ruby on Rails, and packages Motion and AVconv. 
+A Ruby on Rails application for private-network camera viewing and recording.
 
-== Getting started
+== Development
 
-First, install new versions of Motion and AVconv packages. 
-To run bartCAM you need at least Ruby 2.0 and Rails 4.0.
+Requires Ruby 4.0.2, Bundler 4.0.10 and Node.js 24 or newer. Dependencies are
+locked for macOS ARM64 and Linux x86_64. No global application gems are needed:
 
-After that run:
-        rake db:setup
-        
-And everything should work :)
+    bundle config set --local path vendor/bundle
+    bundle install
+    npm ci --ignore-scripts
+    npm run build
+    bin/rails db:prepare
+    bin/rails server
 
+The browser assets are Bootstrap 5.3.8 and Rails UJS. The copies in vendor/assets
+are generated from package-lock.json with npm run build and verified in CI.
+The player uses native HTML5 video; obsolete Flash, jQuery, CoffeeScript, Less,
+Ruby Sass and embedded V8 runtimes have been removed.
+
+== Production upgrade from Rails 4
+
+This is a framework/runtime migration. Rehearse it against a database backup in
+staging before release. The PR does not deploy anything.
+
+1. Stop the old application, all Motion workers, and the old cleanup cron job.
+   Back up the SQLite database, configuration and recordings securely. Those
+   backups contain plaintext legacy account and camera credentials.
+2. Install the new Ruby/runtime and locked dependencies as above. Set a fresh
+   SECRET_KEY_BASE (generate with bin/rails secret); the committed legacy key is
+   compromised and has been removed. All users must log in again. If New Relic
+   is used, revoke the previously committed license key and supply a replacement
+   with NEW_RELIC_LICENSE_KEY. Never reuse keys from repository history.
+3. Run RAILS_ENV=production bin/rails db:migrate. It hashes existing account
+   passwords with bcrypt before removing the plaintext column. Existing short
+   passwords still authenticate; newly set passwords require 12 characters.
+   Legacy passwords over 72 bytes require an operator-assisted reset before
+   migration; the migration aborts rather than truncating them. Review and
+   purge old database backups under your retention policy after verification.
+   SQLite WAL/journal files and filesystem snapshots can retain old bytes;
+   checkpoint and compact the database offline after backup verification.
+4. Run RAILS_ENV=production bin/rails security:migrate_recordings while the old
+   server is stopped. It moves public/video to storage/recordings. Reconcile an
+   already-existing destination manually. Remove any old public/video alias or
+   cached recordings from nginx/CDN. The web root must contain no recordings.
+   Only the authenticated owner may download through the new /video route.
+5. Use Motion 4.7 or later with native MP4 support. Old Motion/AVconv configs
+   and process IDs are not reused. Recording now writes private configuration
+   and video under storage/. Start recordings again from their owner account.
+   Run the application as a dedicated unprivileged user with access only to
+   approved camera networks; camera destinations may be private IP addresses.
+   Camera credentials are still needed to access hardware: restrict database,
+   configuration, backup access and enable disk encryption on the host.
+6. Run RAILS_ENV=production bin/rails assets:precompile. Remove old public/assets
+   files before publishing the fresh build. Serve through HTTPS; secure cookies
+   and forced SSL are enabled. Configure the reverse proxy to pass the original
+   HTTPS scheme correctly. Keep storage/ entirely outside static-server aliases.
+7. Verify viewing, recording and stopping with the actual camera/Motion service.
+   Hardware integration is not covered by the automated tests. Reinstall the
+   cleanup schedule with bundle exec whenever --update-crontab after verifying
+   its account/environment. Cleanup retains the historic 1 MiB per-camera limit.
+
+Existing administrators keep their role. Public registration never assigns
+administrator privileges. For a new installation, an operator can explicitly
+promote a trusted registered account with bin/rails console:
+
+    User.find_by!(email: 'trusted@example.org').update!(role: 'admin')
+
+Catalog writes require administrator access. Every camera configuration,
+recording command and download is scoped to the signed-in owner. Login and
+registration use CSRF-protected POSTs and Rails rate limits; configure a shared
+Rails cache store if using several web processes/hosts so rate limits span them.
+
+== Verification
+
+    bin/rails db:prepare zeitwerk:check
+    bin/rails test
+    bundle exec ruby test/legacy_upgrade.rb
+    bundle exec brakeman --no-pager
+    npm audit --audit-level=low
+    osv-scanner scan source --recursive .
+
+CI also verifies production boot/assets and scans all manifests weekly, on every
+push and on pull requests. OSV findings fail the job at any severity; there are
+no vulnerability ignores or dismissed advisories. Dependabot checks Bundler,
+npm and GitHub Actions weekly. Deprecation or maintenance warnings are distinct
+from a vulnerability finding and must not be treated as proof of exploitability.

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class LinksController < ApplicationController
+  before_action :require_login
+  before_action :require_admin, except: [:index, :show]
   before_action :set_link, only: %i[show edit update destroy]
 
   # GET /links

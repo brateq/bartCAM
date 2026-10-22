@@ -1,0 +1,63 @@
+name: Security and application checks
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: '23 5 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  application:
+    runs-on: ubuntu-latest
+    env:
+      RAILS_ENV: test
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: ruby/setup-ruby@e1bd6146574da5e0795075b5319b300edb30c5b0
+        with:
+          bundler: '4.0.10'
+          bundler-cache: true
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm run build
+      - name: Verify vendored assets match the lockfile
+        run: git diff --exit-code -- vendor/assets
+      - run: npm audit --audit-level=low
+      - run: bundle exec rails db:prepare zeitwerk:check
+      - run: bundle exec rails test
+      - run: bundle exec ruby test/legacy_upgrade.rb
+      - run: bundle exec brakeman --no-pager
+      - name: Production asset build and boot
+        env:
+          RAILS_ENV: production
+          SECRET_KEY_BASE: ci-only-secret-for-asset-build-with-no-deployment-access-1234567890
+        run: |
+          bundle exec rails assets:precompile
+          bundle exec rails runner 'Rails.application.eager_load!; puts "Production boot passed"'
+
+  dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Install checksum-verified OSV Scanner
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download v2.7.0 --repo google/osv-scanner --pattern osv-scanner_linux_amd64 --pattern osv-scanner_SHA256SUMS --dir "$RUNNER_TEMP/osv"
+          cd "$RUNNER_TEMP/osv"
+          grep ' osv-scanner_linux_amd64$' osv-scanner_SHA256SUMS | sha256sum --check --strict
+          chmod +x osv-scanner_linux_amd64
+      - name: Scan every maintained manifest and lockfile, including dev dependencies
+        run: '"$RUNNER_TEMP/osv/osv-scanner_linux_amd64" scan source --recursive --format json --output-file osv-results.json .'
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: osv-results
+          path: osv-results.json

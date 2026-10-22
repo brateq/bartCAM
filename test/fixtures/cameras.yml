@@ -1,21 +1,17 @@
-# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
-
 one:
-  name: MyString
-  model: MyString
-  link: MyString
-  login: MyString
-  pass: MyString
-  port: 1
-  add_date: 2013-11-06
-  edit_date: 2013-11-06
+  name: Owner camera
+  link: camera.example.org
+  login: viewer
+  pass: camera-password
+  port: 8080
+  user: one
+  url: one
+  recording: false
 
 two:
-  name: MyString
-  model: MyString
-  link: MyString
-  login: MyString
-  pass: MyString
-  port: 1
-  add_date: 2013-11-06
-  edit_date: 2013-11-06
+  name: Other camera
+  link: other.example.org
+  port: 8080
+  user: two
+  url: one
+  recording: false
