@@ -14,3 +14,12 @@
 # Ignore all logfiles and tempfiles.
 /log/*.log
 /tmp
+
+/vendor/bundle
+/node_modules
+/public/assets
+/storage
+/config/motion/*.conf
+/config/motion/*.pid
+/db/*.sqlite3-*
+.env*

@@ -1,16 +1,14 @@
 # frozen_string_literal: true
 
 class User < ActiveRecord::Base
-  has_many :cameras
+  has_secure_password
+  has_many :cameras, dependent: :destroy
 
-  after_create :set_admin
+  validates :password, length: { minimum: 12 }, allow_nil: true
+  validates :email, presence: true, uniqueness: true, length: { maximum: 254 },
+    format: { with: URI::MailTo::EMAIL_REGEXP }
 
-  validates :password, presence: true, length: { minimum: 4 }
-  validates :email, presence: true, uniqueness: true, length: { minimum: 4, maximum: 30 }, format: { with: /[a-zA-Z0-9.\-_]+\@[a-zA-Z0-9.\-_]+\.[a-z]{2,4}/ }
-
-  private
-
-  def set_admin
-    User.first.update_attribute(:role, 'admin') if User.count == 1
+  def admin?
+    role == 'admin'
   end
 end

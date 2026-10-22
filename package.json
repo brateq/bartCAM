@@ -1,0 +1,11 @@
+{
+  "name": "bartcam-assets",
+  "private": true,
+  "scripts": {
+    "build": "node script/vendor-assets.mjs"
+  },
+  "dependencies": {
+    "bootstrap": "5.3.8"
+  },
+  "engines": { "node": ">=24" }
+}

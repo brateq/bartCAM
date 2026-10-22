@@ -1,13 +1,8 @@
-# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
-
 one:
-  username: MyString
-  password: MyString
-  email: MyString
-  register_date: 2013-11-02
+  email: owner@example.org
+  password_digest: <%= BCrypt::Password.create('correct-password', cost: 4) %>
+  role: admin
 
 two:
-  username: MyString
-  password: MyString
-  email: MyString
-  register_date: 2013-11-02
+  email: other@example.org
+  password_digest: <%= BCrypt::Password.create('correct-password', cost: 4) %>

@@ -1,58 +1,47 @@
 # frozen_string_literal: true
 
 class AccountController < ApplicationController
+  before_action :require_login, only: :start
+  rate_limit to: 10, within: 3.minutes, only: [:login, :new]
+
   def start
-    @id = session[:user_id]
-    redirect_to action: 'login' unless session[:user_id]
+    @id = current_user.id
   end
 
   def new
-    redirect_to action: 'start' if session[:user_id]
-    if params['user']
-      data = {
-        'email' => params['user']['email'],
-        'password' => params['user']['password'],
-        'register_date' => DateTime.now.to_date
-      }
-      @save = User.new(data)
+    return redirect_to account_start_path if current_user
+    return unless request.post?
 
-      if @save.save
-        session[:user_id] = @save.id
-        @user = User.find_by_id(session[:user_id])
-        flash[:notice] = 'Witaj! Zacznijmy od dodania Twojej kamery'
-        redirect_to '/config/new'
-      else
-        flash[:alert] = 'Bład podczas rejestracji'
-      end
+    @save = User.new(params.require(:user).permit(:email, :password))
+    @save.register_date = Date.current
+    if @save.save
+      reset_session
+      session[:user_id] = @save.id
+      redirect_to new_config_path, notice: 'Witaj! Zacznijmy od dodania Twojej kamery'
+    else
+      flash.now[:alert] = 'Błąd podczas rejestracji'
+      render :new, status: :unprocessable_entity
     end
   end
 
-  def remove; end
-
   def login
-    redirect_to action: 'start' if session[:user_id]
-    if params['login']
-      if user = User.find_by_email(params['login']['email'])
-        password = params['login']['password']
-        if password == user.password
-          session[:user_id] = user.id
-          @user = User.find_by_id(session[:user_id])
-          flash[:notice] = 'Witaj ponownie :)'
-          redirect_to '/mycam/main'
-        else
-          flash[:alert] = 'Błędne hasło'
-        end
+    return redirect_to account_start_path if current_user
+    return unless request.post?
 
-      else
-        flash[:alert] = 'Nie znalazłem takiego użytkownika :('
-      end
-
+    credentials = params.require(:login).permit(:email, :password)
+    user = User.authenticate_by(email: credentials[:email], password: credentials[:password])
+    if user
+      reset_session
+      session[:user_id] = user.id
+      redirect_to mycam_main_path, notice: 'Witaj ponownie :)'
+    else
+      flash.now[:alert] = 'Błędny e-mail lub hasło'
+      render :login, status: :unprocessable_entity
     end
   end
 
   def logou
-    session[:user_id] = nil
-    flash[:notice] = 'Do zobaczenia'
-    redirect_to action: 'login'
+    reset_session
+    redirect_to account_login_path, notice: 'Do zobaczenia'
   end
 end

@@ -1,58 +1,48 @@
 # frozen_string_literal: true
 
 class ConfigController < ApplicationController
-  before_action :require_login, :any_camera, only: %i[show index]
-  before_action :set_config, only: %i[show edit update destroy]
+  before_action :require_login
+  before_action :any_camera, only: :index
+  before_action :set_owned_camera, only: [:show, :update, :destroy]
 
   def index
-    @first_camera = Camera.where(user_id: session[:user_id]).first
-    redirect_to action: :show, id: @first_camera
+    redirect_to config_path(current_user.cameras.first!)
   end
 
-  def show
-    if Camera.where(id: params[:id], user_id: session[:user_id]).count != 0
-      @camera = Camera.find(params[:id])
-    else
-      redirect_to action: 'create'
-    end
+  def new
+    @save = Camera.new
   end
+
+  def show; end
 
   def create
-    @save = Camera.new(camera_config)
-    @save.user_id = session[:user_id]
-
+    @save = current_user.cameras.new(camera_config)
     if @save.save
-      flash[:notice] = 'Konfiguracja zostałą zapisana'
-      redirect_to action: 'index'
+      redirect_to config_path(@save), notice: 'Konfiguracja została zapisana'
     else
-      flash[:alert] = 'Bład przy dodawaniu kamery'
-      redirect_to '/'
+      flash.now[:alert] = 'Błąd przy dodawaniu kamery'
+      render :new, status: :unprocessable_entity
     end
   end
 
   def update
-    if @camera.update_attributes(camera_config)
-      flash[:notice] = 'Konfiguracja zapisana'
+    if @camera.update(camera_config)
+      redirect_to config_path(@camera), notice: 'Konfiguracja zapisana'
     else
-      flash[:alert] = 'Występują błedy w formularzu, wszystkie zostały wypisane poniżej'
+      flash.now[:alert] = 'Występują błędy w formularzu'
+      render :show, status: :unprocessable_entity
     end
-    redirect_to "/config/#{@camera.id}"
   end
 
   def destroy
-    @camera = Camera.find(params[:id])
-    @camera.destroy
-    flash[:notice] = 'Kamera została usunięta'
-    redirect_to action: :index
+    Recording.new(@camera).stop if @camera.recording?
+    @camera.destroy!
+    redirect_to config_index_path, notice: 'Kamera została usunięta'
   end
 
   private
 
   def camera_config
     params.require(:camera).permit(:name, :url_id, :link, :login, :pass, :port)
-  end
-
-  def set_config
-    @camera = Camera.find(params[:id])
   end
 end

@@ -6,9 +6,9 @@ class BartcamMailer < ActionMailer::Base
   # Subject can be set in your I18n file at config/locales/en.yml
   # with the following lookup:
   #
-  #   en.bartcam_mailer.new.subject
+  #   en.bartcam_mailer.welcome.subject
   #
-  def new
+  def welcome
     @greeting = 'Hi'
 
     mail to: 'to@example.org'
